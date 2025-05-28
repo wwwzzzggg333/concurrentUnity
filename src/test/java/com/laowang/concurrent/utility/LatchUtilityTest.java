@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LatchUtilityTest {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(2);
+
     private void sleep(long seconds) {
         try {
             Thread.sleep(seconds * 1000L);
@@ -60,7 +61,7 @@ class LatchUtilityTest {
     }
 
     @org.junit.jupiter.api.Test
-    void submitTask4() {
+    void submitTask3() {
     }
 
     void yourSubmitTask(Object parm1, Object parm2) {
