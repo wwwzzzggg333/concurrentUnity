@@ -1,7 +1,7 @@
 # concurrentUnity
  
 ## LatchUtility
-- 封装CountDownLatch，让线程等待更优化
+- 对多线程并行同步CountDownLatch进行封装，让线程并发等待更优雅
 
 _________________
 以一个常见的功能为例：多个线程并行处理，主线程等待所有线程处理完成再继续执行。
