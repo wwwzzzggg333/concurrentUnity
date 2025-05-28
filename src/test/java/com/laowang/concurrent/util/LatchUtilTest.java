@@ -34,7 +34,7 @@ class LatchUtilTest {
         LatchUtils.submitTask(executorService, () -> {
             log.info("task3");
         });
-        assertTrue(LatchUtils.waitFor(6L));
+        assertTrue(LatchUtils.waitFor(6L, null));
     }
 
     @org.junit.jupiter.api.Test
@@ -55,7 +55,7 @@ class LatchUtilTest {
         LatchUtils.submitTask(executorService, () -> {
             log.info("task3");
         });
-        assertTrue(LatchUtils.waitFor(4L));
+        assertTrue(LatchUtils.waitFor(4L, null));
     }
 
 }

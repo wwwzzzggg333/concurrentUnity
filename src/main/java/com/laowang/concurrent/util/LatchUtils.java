@@ -30,7 +30,7 @@ public class LatchUtils {
         return taskInfos;
     }
 
-    public static boolean waitFor(Long seconds) {
+    public static boolean waitFor(Long timeout, TimeUnit timeUnit) {
         List<TaskInfo> taskInfos = popTask();
         if (taskInfos.isEmpty()) {
             return true;
@@ -50,8 +50,8 @@ public class LatchUtils {
         }
         boolean await = false;
         try {
-            if (seconds != null) {
-                await = latch.await(seconds, TimeUnit.SECONDS);
+            if (timeout != null) {
+                await = latch.await(timeout, timeUnit != null ? timeUnit : TimeUnit.SECONDS);
             } else {
                 latch.await();
                 await = true;

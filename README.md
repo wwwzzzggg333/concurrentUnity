@@ -54,7 +54,7 @@ _________________
             //process parm2
         });
 
-        LatchUtils.waitFor(10L);
+        LatchUtils.waitFor(10L, TimeUnit.SECONDS);
         //go on do something
     }
 ```
