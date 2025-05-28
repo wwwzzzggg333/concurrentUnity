@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class LatchUtility {
 
     @AllArgsConstructor
-    @Data
-    private static class TaskInfo {
+    private static final class TaskInfo {
         private Executor executor;
         private Runnable runnable;
     }
