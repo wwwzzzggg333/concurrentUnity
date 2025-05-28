@@ -1,4 +1,4 @@
-package com.laowang.concurrent.unity;
+package com.laowang.concurrent.utility;
 
 import lombok.extern.slf4j.Slf4j;
 

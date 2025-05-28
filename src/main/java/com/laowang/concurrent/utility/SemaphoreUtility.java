@@ -1,4 +1,4 @@
-package com.laowang.concurrent.unity;
+package com.laowang.concurrent.utility;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Semaphore;
 
 @Slf4j
-public class SemaphoreUnity {
+public class SemaphoreUtility {
 
     @AllArgsConstructor
     @Data
