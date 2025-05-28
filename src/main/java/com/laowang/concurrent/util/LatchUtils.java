@@ -1,7 +1,6 @@
-package com.laowang.concurrent.utility;
+package com.laowang.concurrent.util;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.LinkedList;
@@ -11,7 +10,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-public class LatchUtility {
+public class LatchUtils {
 
     @AllArgsConstructor
     private static final class TaskInfo {

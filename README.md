@@ -1,6 +1,6 @@
 # concurrentUtility
  
-## LatchUtility
+## LatchUtils
 - 对多线程并行同步CountDownLatch进行封装，让线程并发等待更优雅
 
 _________________
@@ -40,27 +40,27 @@ void yourSubmitTask(Object parm1, Object parm2) {
 ```
 
 _________________
-使用LatchUtility方法如下
+使用LatchUtils方法如下
 ```java
 //创建线程并行处理parm1和parm2，主线程等待两个线程处理完成再继续执行
     void mySubmitTask(Object parm1, Object parm2) {
-        LatchUtility.submitTask(executorService, () -> {
+        LatchUtils.submitTask(executorService, () -> {
             log.info("task1");
             //process parm1
         });
 
-        LatchUtility.submitTask(executorService, () -> {
+        LatchUtils.submitTask(executorService, () -> {
             log.info("task2");
             //process parm2
         });
 
-        LatchUtility.waitFor(10L);
+        LatchUtils.waitFor(10L);
         //go on do something
     }
 ```
 _________________
-从上代码可以看出使用LatchUtility 工具类可以有效的隐藏在多线程中操作线程并发对象的代码，减少线程同步的误操作，让代码更优雅。
+从上代码可以看出使用LatchUtils 工具类可以有效的隐藏在多线程中操作线程并发对象的代码，减少线程同步的误操作，让代码更优雅。
 
 _________________
-This is a simple example of how to use the LatchUtility class to wait for a set number of tasks to complete before continuing with the rest of the program. The LatchUtility class uses a CountDownLatch to track the number of tasks that have completed, and a Waiter to wait for the latch to count down to zero. The submitTask method is used to submit a task to the executor service, which will execute the task asynchronously. The waitFor method is used to wait for a specified number of tasks to complete.
+This is a simple example of how to use the LatchUtils class to wait for a set number of tasks to complete before continuing with the rest of the program. The LatchUtils class uses a CountDownLatch to track the number of tasks that have completed, and a Waiter to wait for the latch to count down to zero. The submitTask method is used to submit a task to the executor service, which will execute the task asynchronously. The waitFor method is used to wait for a specified number of tasks to complete.
 
