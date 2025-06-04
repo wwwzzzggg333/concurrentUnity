@@ -4,10 +4,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 public class LockUtils {
-    
+
     public static LockStat lock(Lock lock) {
         lock.lock();
         return new LockStat(lock, true);
+    }
+
+    public static LockStat tryLock(Lock lock) {
+        boolean tryLock = lock.tryLock();
+        return new LockStat(lock, tryLock);
     }
 
     public static LockStat tryLock(Lock lock, long timeout, TimeUnit timeUnit) {
@@ -20,7 +25,7 @@ public class LockUtils {
         }
         return new LockStat(lock, tryLock);
     }
-    
+
     /**
      * Lock status wrapper class that implements AutoCloseable for try-with-resources support
      */
