@@ -204,6 +204,138 @@ public class ResourceManager {
 }
 ```
 
+### LockUtils - 锁管理工具
+
+`LockUtils` 是对 Java `Lock` 接口的封装，提供了更安全、更便捷的锁管理方式，支持 try-with-resources 语法。
+
+#### 核心方法
+
+##### lock(Lock lock)
+获取指定的锁，返回一个 `LockStat` 对象。
+
+**参数说明：**
+- `lock`: 要获取的锁对象
+
+**返回值：**
+- `LockStat`: 锁状态封装对象，实现了 `AutoCloseable` 接口
+
+**使用示例：**
+```java
+Lock myLock = new ReentrantLock();
+
+// 传统方式
+try (LockUtils.LockStat lockStat = LockUtils.lock(myLock)) {
+    // 执行需要同步的代码
+    performCriticalSection();
+} // 锁会自动释放
+```
+
+##### tryLock(Lock lock, long timeout, TimeUnit timeUnit)
+尝试在指定时间内获取锁。
+
+**参数说明：**
+- `lock`: 要获取的锁对象
+- `timeout`: 超时时间
+- `timeUnit`: 时间单位
+
+**返回值：**
+- `LockStat`: 锁状态封装对象，通过 `isLocked()` 方法可以检查是否成功获取锁
+
+**使用示例：**
+```java
+Lock myLock = new ReentrantLock();
+
+try (LockUtils.LockStat lockStat = LockUtils.tryLock(myLock, 5L, TimeUnit.SECONDS)) {
+    if (lockStat.isLocked()) {
+        // 成功获取锁，执行业务逻辑
+        performCriticalSection();
+    } else {
+        // 获取锁失败，执行备选方案
+        handleLockFailure();
+    }
+} // 如果获取了锁，会自动释放
+```
+
+#### LockStat 内部类
+
+`LockStat` 是锁状态的封装类，提供以下方法：
+
+- `getLock()`: 获取原始锁对象
+- `isLocked()`: 检查是否成功获取了锁
+- `close()`: 释放锁（如果已获取）
+
+#### 完整使用示例
+
+```java
+public class BankAccount {
+    private final Lock accountLock = new ReentrantLock();
+    private double balance;
+    
+    public boolean transfer(BankAccount target, double amount) {
+        // 使用 LockUtils 安全地获取锁
+        try (LockUtils.LockStat lockStat = LockUtils.tryLock(accountLock, 1L, TimeUnit.SECONDS)) {
+            if (!lockStat.isLocked()) {
+                log.warn("无法获取账户锁，转账失败");
+                return false;
+            }
+            
+            if (balance >= amount) {
+                balance -= amount;
+                target.deposit(amount);
+                log.info("转账成功: {}", amount);
+                return true;
+            } else {
+                log.warn("余额不足，转账失败");
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("转账过程中发生异常", e);
+            return false;
+        }
+        // 锁会在这里自动释放
+    }
+    
+    public void deposit(double amount) {
+        try (LockUtils.LockStat lockStat = LockUtils.lock(accountLock)) {
+            balance += amount;
+            log.info("存款成功: {}", amount);
+        } catch (Exception e) {
+            log.error("存款过程中发生异常", e);
+        }
+    }
+}
+```
+
+#### 优势特性
+
+1. **自动资源管理**：实现了 `AutoCloseable` 接口，支持 try-with-resources 语法
+2. **异常安全**：即使在发生异常的情况下也能正确释放锁
+3. **状态检查**：可以方便地检查锁是否成功获取
+4. **简化代码**：减少了手动管理锁的样板代码
+
+#### 与传统方式对比
+
+**传统方式：**
+```java
+Lock lock = new ReentrantLock();
+lock.lock();
+try {
+    // 业务逻辑
+    performCriticalSection();
+} finally {
+    lock.unlock(); // 容易忘记或在异常情况下未执行
+}
+```
+
+**使用 LockUtils：**
+```java
+Lock lock = new ReentrantLock();
+try (LockUtils.LockStat lockStat = LockUtils.lock(lock)) {
+    // 业务逻辑
+    performCriticalSection();
+} // 锁自动释放，无需手动管理
+```
+
 ## 传统方式 vs ConcurrentUtility 对比
 
 ### 使用传统CountDownLatch的方式：
@@ -323,3 +455,4 @@ mvn clean package
 
 *让并发编程更简单、更安全！*
 
+---
