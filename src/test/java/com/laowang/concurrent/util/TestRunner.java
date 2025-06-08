@@ -41,7 +41,7 @@ public class TestRunner {
         Lock testLock = new ReentrantLock();
         
         // 使用LockUtils.lock获取锁
-        LockUtils.LockStat lockStat = LockUtils.lock(testLock);
+        LockStat lockStat = LockUtils.lock(testLock);
         
         // 验证锁被正确获取
         assert lockStat != null : "LockStat对象不应为null";
@@ -69,7 +69,7 @@ public class TestRunner {
         Lock testLock = new ReentrantLock();
         
         // 尝试获取可用的锁
-        LockUtils.LockStat lockStat = LockUtils.tryLock(testLock, 1L, TimeUnit.SECONDS);
+        LockStat lockStat = LockUtils.tryLock(testLock, 1L, TimeUnit.SECONDS);
         
         // 验证锁被正确获取
         assert lockStat != null : "LockStat对象不应为null";
@@ -93,7 +93,7 @@ public class TestRunner {
         
         try {
             // 尝试获取已被占用的锁（应该失败）
-            LockUtils.LockStat lockStat = LockUtils.tryLock(testLock, 100L, TimeUnit.MILLISECONDS);
+            LockStat lockStat = LockUtils.tryLock(testLock, 100L, TimeUnit.MILLISECONDS);
             
             // 验证获取锁失败
             assert lockStat != null : "LockStat对象不应为null";
@@ -117,7 +117,7 @@ public class TestRunner {
         Lock testLock = new ReentrantLock();
         
         // 使用try-with-resources
-        try (LockUtils.LockStat lockStat = LockUtils.lock(testLock)) {
+        try (LockStat lockStat = LockUtils.lock(testLock)) {
             assert lockStat.isLocked() : "锁状态应该为true";
             assert !testLock.tryLock() : "锁应该已被占用";
         }
@@ -143,7 +143,7 @@ public class TestRunner {
         for (int i = 0; i < threadCount; i++) {
             final int index = i;
             threads[i] = new Thread(() -> {
-                try (LockUtils.LockStat lockStat = LockUtils.lock(testLock)) {
+                try (LockStat lockStat = LockUtils.lock(testLock)) {
                     // 模拟一些工作
                     Thread.sleep(10);
                     results[index] = lockStat.isLocked();

@@ -34,7 +34,7 @@ public class SimpleTestRunner {
         System.out.println("\n1. Testing basic lock functionality...");
         Lock testLock = new ReentrantLock();
         
-        LockUtils.LockStat lockStat = LockUtils.lock(testLock);
+        LockStat lockStat = LockUtils.lock(testLock);
         
         assert lockStat != null : "LockStat should not be null";
         assert lockStat.getLock() == testLock : "Lock should match";
@@ -66,7 +66,7 @@ public class SimpleTestRunner {
         System.out.println("\n2. Testing tryLock success scenario...");
         Lock testLock = new ReentrantLock();
         
-        LockUtils.LockStat lockStat = LockUtils.tryLock(testLock, 1L, TimeUnit.SECONDS);
+        LockStat lockStat = LockUtils.tryLock(testLock, 1L, TimeUnit.SECONDS);
         
         assert lockStat != null : "LockStat should not be null";
         assert lockStat.isLocked() : "Lock status should be true";
@@ -83,7 +83,7 @@ public class SimpleTestRunner {
         testLock.lock();
         
         try {
-            LockUtils.LockStat lockStat = LockUtils.tryLock(testLock, 10L, TimeUnit.MILLISECONDS);
+            LockStat lockStat = LockUtils.tryLock(testLock, 10L, TimeUnit.MILLISECONDS);
             
             assert lockStat != null : "LockStat should not be null";
             assert !lockStat.isLocked() : "Lock status should be false";
@@ -101,7 +101,7 @@ public class SimpleTestRunner {
         System.out.println("\n4. Testing auto-close functionality...");
         Lock testLock = new ReentrantLock();
         
-        try (LockUtils.LockStat lockStat = LockUtils.lock(testLock)) {
+        try (LockStat lockStat = LockUtils.lock(testLock)) {
             assert lockStat.isLocked() : "Lock status should be true";
             
             // Test in a separate thread

@@ -12,13 +12,6 @@ import java.util.concurrent.Semaphore;
 @Slf4j
 public class SemaphoreUtils {
 
-    @AllArgsConstructor
-    @Data
-    private static class TaskInfo {
-        private Executor executor;
-        private Runnable[] runnables;
-    }
-
     private static final ThreadLocal<List<TaskInfo>> THREADLOCAL = ThreadLocal.withInitial(LinkedList::new);
 
     public static void submitTask(Executor executor, Runnable after) {
@@ -64,6 +57,13 @@ public class SemaphoreUtils {
             });
         }
 
+    }
+
+    @AllArgsConstructor
+    @Data
+    private static class TaskInfo {
+        private Executor executor;
+        private Runnable[] runnables;
     }
 
 }

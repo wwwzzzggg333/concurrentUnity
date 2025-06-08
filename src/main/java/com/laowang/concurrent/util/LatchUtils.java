@@ -12,12 +12,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class LatchUtils {
 
-    @AllArgsConstructor
-    private static final class TaskInfo {
-        private Executor executor;
-        private Runnable runnable;
-    }
-
     private static final ThreadLocal<List<TaskInfo>> THREADLOCAL = ThreadLocal.withInitial(LinkedList::new);
 
     public static void submitTask(Executor executor, Runnable runnable) {
@@ -61,6 +55,12 @@ public class LatchUtils {
         }
 
         return await;
+    }
+
+    @AllArgsConstructor
+    private static final class TaskInfo {
+        private Executor executor;
+        private Runnable runnable;
     }
 
 }
