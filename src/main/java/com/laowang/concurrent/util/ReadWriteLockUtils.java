@@ -1,7 +1,5 @@
 package com.laowang.concurrent.util;
 
-import lombok.Data;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -11,38 +9,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ReadWriteLockUtils {
 
-    private static final Map<String, LockInfo> LOCKS = new ConcurrentHashMap<>();
+    private static final Map<String, ReadWriteLock> LOCKS = new ConcurrentHashMap<>();
 
-    private static LockInfo getLock(String key) {
-        LockInfo lockInfo = LOCKS.get(key);
-        if (lockInfo != null) {
-            return lockInfo;
-        }
-        synchronized (LOCKS) {
-            lockInfo = LOCKS.get(key);
-            if (lockInfo != null) {
-                return lockInfo;
-            }
-
-            lockInfo = new LockInfo();
-            LOCKS.put(key, lockInfo);
-
-            ReadWriteLock rwLock = new ReentrantReadWriteLock();
-            Lock readLock = rwLock.readLock();
-            Lock writeLock = rwLock.writeLock();
-            lockInfo.setReadWriteLock(rwLock);
-            lockInfo.setReadLock(readLock);
-            lockInfo.setWriteLock(writeLock);
-            return lockInfo;
-        }
+    private static ReadWriteLock getLock(String key) {
+        return LOCKS.computeIfAbsent(key, k -> new ReentrantReadWriteLock());
     }
 
     private static Lock getReadLock(String key) {
-        return getLock(key).getReadLock();
+        return getLock(key).readLock();
     }
 
     private static Lock getWriteLock(String key) {
-        return getLock(key).getWriteLock();
+        return getLock(key).writeLock();
     }
 
     public static LockStat tryReadLock(String lockName, long timeout, TimeUnit timeUnit) {
@@ -75,10 +53,4 @@ public class ReadWriteLockUtils {
         return LockUtils.lock(lock);
     }
 
-    @Data
-    private static class LockInfo {
-        private ReadWriteLock readWriteLock;
-        private Lock readLock;
-        private Lock writeLock;
-    }
 }
