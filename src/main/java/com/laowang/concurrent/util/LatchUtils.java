@@ -1,15 +1,11 @@
 package com.laowang.concurrent.util;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class LatchUtils {
 
     private static final ThreadLocal<List<TaskInfo>> THREADLOCAL = ThreadLocal.withInitial(LinkedList::new);
@@ -29,7 +25,6 @@ public class LatchUtils {
         if (taskInfos.isEmpty()) {
             return true;
         }
-
         CountDownLatch latch = new CountDownLatch(taskInfos.size());
         for (TaskInfo taskInfo : taskInfos) {
             Executor executor = taskInfo.executor;
@@ -45,17 +40,18 @@ public class LatchUtils {
         boolean await = false;
         try {
             await = latch.await(timeout, timeUnit);
-        } catch (Exception e) {
-            log.error("error", e);
+        } catch (Exception ignored) {
         }
-
         return await;
     }
 
-    @AllArgsConstructor
     private static final class TaskInfo {
-        private Executor executor;
-        private Runnable runnable;
-    }
+        private final Executor executor;
+        private final Runnable runnable;
 
+        public TaskInfo(Executor executor, Runnable runnable) {
+            this.executor = executor;
+            this.runnable = runnable;
+        }
+    }
 }
